@@ -39,7 +39,7 @@ button {
     align-items:center;
 }
 
-.choice:hover {
+button:hover {
     background:yellow;
 }
 

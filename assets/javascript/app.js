@@ -5,31 +5,64 @@ $(document).ready(function() {
 //QUESTION ARRAY - set up as array instead of object
 gameArr = [
     {
-    question:"When Pippin says 'I think I broke something', what is he referring to?",
-    answers:{
-        answer:"A carrot",
-        wrong1:"His hand",
-        wrong2:"A tooth",
-        wrong3:"A mirror"
-    }
-},
+        question:"When Pippin says 'I think I broke something', what is he referring to?",
+        answers:{
+            answer:"A carrot",
+            wrong1:"His hand",
+            wrong2:"A tooth",
+            wrong3:"A mirror",
+        },
+        gif:"assets/images/carrot.gif"
+    },
+    {
+        question:"Which of the following is not mentioned by Bilbo in his birthday speech?",
+        answers: {
+            wrong1:"The Bolgers",
+            wrong2:"The Boffins",
+            answer:"The Cottons",
+            wrong3:"The Grubbs"
+        },
+        gif:"assets/images/bilbo.gif"
+    },
     {
         question:"What is Aragorn's nickname?",
         answers: {
-        wrong1:"The White Wizard",
-        answer:"Stryder",
-        wrong2:"Captain Falcon",
-        wrong3:"Oompa Loompa"
-    }
-},
+            wrong1:"The White Wizard",
+            answer:"Strider",
+            wrong2:"Captain Falcon",
+            wrong3:"Oompa Loompa"
+        },
+        gif:"assets/images/strider.gif"
+    },
+    {
+        question:"How does Frodo know Sam?",
+        answers: {
+            answer:"Sam is his gardner",
+            wrong1:"They are cousins",
+            wrong2:"Sam is his cook",
+            wrong3:"They don't know each other"
+        },
+        gif:"assets/images/potatoes.gif"
+    },
+    {
+        question:"What is the name of the ferry the hobbits use to escape the Nazgûl?",
+        answers:{
+            wrong1:"Brandybuck",
+            wrong2:"Mordor Ferry",
+            wrong3:"Buckbeak",
+            answer:"Buckleberry"
+        },
+        gif:"assets/images/buckleberry.gif"
+    },
     {
         question:"What does Aragorn say before rushing the Black Gate?",
         answers: {
-        wrong1:"Today we fight!",
-        wrong3:"Go go Power Rangers!",
-        wrong2:"Fool of a Took!",
-        answer:"For Frodo"
-    }
+            wrong1:"Today we fight!",
+            wrong3:"Go go Power Rangers!",
+            wrong2:"Fool of a Took!",
+            answer:"For Frodo"
+        },
+    gif:"assets/images/yolo.gif"
     }
 ]
 
@@ -51,7 +84,7 @@ function getAns() {
 //Function to start the game
 function loadGame() {
     $("#content").empty();
-    $("#content").append("<button id=start>Start</button>")
+    $("#content").append("<button class=rounded id=start>Start</button>")
     $("#start").on("click", function() {
         firstQues()
     })
@@ -111,7 +144,7 @@ function displayQues() {
     $("#question").html("<h2>" + gameArr[quesCounter].question + "<h2>");
     for (key in gameArr[quesCounter].answers) {
         answerBtn = $("<button>" + gameArr[quesCounter].answers[key] + "</button>")
-        answerBtn.addClass("choice")
+        answerBtn.addClass("choice rounded")
         $("#choices").append("<br>")
         $("#choices").append(answerBtn)
     }
@@ -131,10 +164,11 @@ function submitAns() {
         }
         else {
             wrong++
-            $("#content").append("<h2>Wrong! The correct answer was " + currentAns + ".</h2>")
+            $("#content").append("<h2>Wrong! The correct answer was '" + currentAns + "'.</h2>")
         }
-
         $("#choices, #question").empty()
+        var quesGIF = $("<img>").attr("src",gameArr[quesCounter].gif)
+        $("#content").append(quesGIF)
         setTimeout(nextQues, 3000)
     })
 }
@@ -161,7 +195,7 @@ function displayFinal() {
     $("#content").append("Unanswered: " + unanswered + "<br>");
     var score = (correct/gameArr.length*100).toFixed(0)
     $("#content").append("Your total score: " + score + "%<br>")
-    $("#content").append($("<br><button id=restart>Restart</button>"))
+    $("#content").append($("<br><button class=rounded id=restart>Restart</button>"))
     $("#restart").on("click", function() {
         restartGame();
     })
