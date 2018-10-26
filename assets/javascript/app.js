@@ -73,13 +73,14 @@ var correct = 0
 var wrong = 0
 var unanswered = 0
 var gameArr;
+var currentQuesIndex;
 
 //FUNCTIONS
 
 
 //Function to get the answer to the current question
 function getAns() {
-    currentAns = gameArr[quesCounter].answers.answer
+    currentAns = gameArr[currentQuesIndex].answers.answer
 }
 
 //Function to start the game
@@ -95,7 +96,6 @@ function loadGame() {
 function firstQues() {
     $("#content").empty();
     gameArr = questionArr.slice(0)
-    console.log(gameArr)
     displayQues();
 }
 
@@ -119,15 +119,15 @@ function runTimer() {
     $("#timer").html("You have " + number + " seconds left")
     clearInterval(intervalId)
     intervalId = setInterval(decrement, 1000)
-
 }
 
 //Function if time runs out
 function timeOut() {
     $("#timer").html("You ran out of time!");
     $("#question, #choices").empty();
-    var quesGIF = $("<img>").attr("src",gameArr[quesCounter].gif)
-        $("#content").append(quesGIF)
+    $("#content").html("<h2>The correct answer was '" + currentAns + "'.</h2>")
+    var quesGIF = $("<img>").attr("src",gameArr[currentQuesIndex].gif)
+    $("#content").append(quesGIF)
     setTimeout(nextQues, 4000);
 }
 
@@ -146,15 +146,18 @@ function resetTimer() {
 //Function to display question and answers
 function displayQues() {
     runTimer();
-    $("#question").html("<h2>" + gameArr[quesCounter].question + "<h2>");
-    for (key in gameArr[quesCounter].answers) {
-        answerBtn = $("<button>" + gameArr[quesCounter].answers[key] + "</button>")
+    currentQuesIndex = Math.floor(Math.random() * gameArr.length)
+    console.log(currentQuesIndex)
+    $("#question").html("<h2>" + gameArr[currentQuesIndex].question + "<h2>");
+    for (key in gameArr[currentQuesIndex].answers) {
+        answerBtn = $("<button>" + gameArr[currentQuesIndex].answers[key] + "</button>")
         answerBtn.addClass("choice rounded")
         $("#choices").append("<br>")
         $("#choices").append(answerBtn)
     }
-    // runTimer()
-    submitAns()
+    getAns();
+    submitAns();
+
 }
 
 //Function for user picking answer and it evaluating whether it is correct
@@ -162,7 +165,7 @@ function submitAns() {
     $(".choice").on("click", function() {
         $("#timer").empty();
         stop();
-        getAns();
+
         if (this.textContent === currentAns) {
             correct++
             $("#content").append("<h2>That's correct!</h2")
@@ -172,18 +175,24 @@ function submitAns() {
             $("#content").append("<h2>Wrong! The correct answer was '" + currentAns + "'.</h2>")
         }
         $("#choices, #question").empty()
-        var quesGIF = $("<img>").attr("src",gameArr[quesCounter].gif)
+        var quesGIF = $("<img>").attr("src",gameArr[currentQuesIndex].gif)
         $("#content").append(quesGIF)
         setTimeout(nextQues, 4000)
     })
+}
+
+//Function to return new array without last question object
+Array.prototype.remove = function(value) {
+    var idx = this.indexOf(value)
 }
 
 //Function to clear out the post-question content and launch the next question
 function nextQues() {
     $("#timer").empty();
     $("#content").empty();
+    gameArr.splice(currentQuesIndex,1);
     quesCounter++;
-    if (quesCounter === gameArr.length) {
+    if (quesCounter === questionArr.length) {
         displayFinal();
     }
     else {
@@ -198,7 +207,7 @@ function displayFinal() {
     $("#content").append("Correct: " + correct + "<br>");
     $("#content").append("Incorrect: " + wrong + "<br>");
     $("#content").append("Unanswered: " + unanswered + "<br>");
-    var score = (correct/gameArr.length*100).toFixed(0)
+    var score = (correct/questionArr.length*100).toFixed(0)
     $("#content").append("Your total score: " + score + "%<br>")
     $("#content").append($("<br><button class=rounded id=restart>Restart</button>"))
     $("#restart").on("click", function() {
