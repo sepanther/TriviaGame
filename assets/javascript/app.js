@@ -5,12 +5,12 @@ $(document).ready(function() {
 //QUESTION ARRAY - set up as array instead of object
 gameArr = [
     {
-    question:"Who is Tulsi's roommate?",
+    question:"When Pippin says 'I think I broke something', what is he referring to?",
     answers:{
-        wrong1:"Reza",
-        wrong2:"Paras",
-        answer:"Aamina",
-        wrong3:"Sepanta"
+        answer:"A carrot",
+        wrong1:"His hand",
+        wrong2:"A tooth",
+        wrong3:"A mirror"
     }
 },
     {
@@ -21,7 +21,16 @@ gameArr = [
         wrong2:"Captain Falcon",
         wrong3:"Oompa Loompa"
     }
-}
+},
+    {
+        question:"What does Aragorn say before rushing the Black Gate?",
+        answers: {
+        wrong1:"Today we fight!",
+        wrong3:"Go go Power Rangers!",
+        wrong2:"Fool of a Took!",
+        answer:"For Frodo"
+    }
+    }
 ]
 
 //OTHER VARIABLES
@@ -33,10 +42,6 @@ unanswered = 0
 
 //FUNCTIONS
 
-//Function to get the question
-function getQues() {
-    currentQues = gameArr[quesCounter].question
-}
 
 //Function to get the answer to the current question
 function getAns() {
@@ -84,7 +89,7 @@ function runTimer() {
 //Function if time runs out
 function timeOut() {
     $("#timer").html("You ran out of time!");
-    $("#question").empty();
+    $("#question, #choices").empty();
     setTimeout(nextQues, 3000);
 }
 
@@ -96,19 +101,19 @@ function stop() {
 //Function to reset timer
 function resetTimer() {
     $("#timer").empty()
-    number = 10
+    number = 300
 }
 
 
 //Function to display question and answers
 function displayQues() {
     runTimer();
-    $("#question").text(gameArr[quesCounter].question);
+    $("#question").html("<h2>" + gameArr[quesCounter].question + "<h2>");
     for (key in gameArr[quesCounter].answers) {
         answerBtn = $("<button>" + gameArr[quesCounter].answers[key] + "</button>")
         answerBtn.addClass("choice")
-        $("#question").append("<br>")
-        $("#question").append(answerBtn)
+        $("#choices").append("<br>")
+        $("#choices").append(answerBtn)
     }
     // runTimer()
     submitAns()
@@ -122,13 +127,14 @@ function submitAns() {
         getAns();
         if (this.textContent === currentAns) {
             correct++
-            $("#content").append("<h2>That's Correct</h2")
+            $("#content").append("<h2>That's correct!</h2")
         }
         else {
             wrong++
             $("#content").append("<h2>Wrong! The correct answer was " + currentAns + ".</h2>")
         }
-        $("#question").empty()
+
+        $("#choices, #question").empty()
         setTimeout(nextQues, 3000)
     })
 }
@@ -149,12 +155,13 @@ function nextQues() {
 
 //Function to display the final game page
 function displayFinal() {
-    $("#content").html($("<h2>You're all set!</h2>"));
+    $("#content").html($("<h2>You're done!</h2>"));
     $("#content").append("Correct: " + correct + "<br>");
     $("#content").append("Incorrect: " + wrong + "<br>");
     $("#content").append("Unanswered: " + unanswered + "<br>");
-    $("#content").append("Your total score: " + correct/gameArr.length*100 + "%<br>")
-    $("#content").append($("<button id=restart>Restart</button>"))
+    var score = (correct/gameArr.length*100).toFixed(0)
+    $("#content").append("Your total score: " + score + "%<br>")
+    $("#content").append($("<br><button id=restart>Restart</button>"))
     $("#restart").on("click", function() {
         restartGame();
     })
