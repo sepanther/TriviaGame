@@ -3,7 +3,7 @@ $(document).ready(function() {
 
 
 //QUESTION ARRAY - set up as array instead of object
-gameArr = [
+questionArr = [
     {
         question:"When Pippin says 'I think I broke something', what is he referring to?",
         answers:{
@@ -67,11 +67,12 @@ gameArr = [
 ]
 
 //OTHER VARIABLES
-currentAns = ""
-quesCounter = 0
-correct = 0
-wrong = 0
-unanswered = 0
+var currentAns = ""
+var quesCounter = 0
+var correct = 0
+var wrong = 0
+var unanswered = 0
+var gameArr;
 
 //FUNCTIONS
 
@@ -93,6 +94,8 @@ function loadGame() {
 //Function for first question
 function firstQues() {
     $("#content").empty();
+    gameArr = questionArr.slice(0)
+    console.log(gameArr)
     displayQues();
 }
 
@@ -123,7 +126,9 @@ function runTimer() {
 function timeOut() {
     $("#timer").html("You ran out of time!");
     $("#question, #choices").empty();
-    setTimeout(nextQues, 3000);
+    var quesGIF = $("<img>").attr("src",gameArr[quesCounter].gif)
+        $("#content").append(quesGIF)
+    setTimeout(nextQues, 4000);
 }
 
 //Function to stop timer
@@ -134,7 +139,7 @@ function stop() {
 //Function to reset timer
 function resetTimer() {
     $("#timer").empty()
-    number = 300
+    number = 10
 }
 
 
@@ -169,7 +174,7 @@ function submitAns() {
         $("#choices, #question").empty()
         var quesGIF = $("<img>").attr("src",gameArr[quesCounter].gif)
         $("#content").append(quesGIF)
-        setTimeout(nextQues, 3000)
+        setTimeout(nextQues, 4000)
     })
 }
 
@@ -208,7 +213,7 @@ function restartGame() {
     wrong = 0
     unanswered = 0
     resetTimer();
-    loadGame();
+    firstQues();
 }
 
 loadGame()

@@ -45,5 +45,10 @@ button:hover {
 
 #content {
     position:relative;
+    text-align:center;
     /* top:50px; */
+}
+
+h2 {
+    text-align:center;
 }
